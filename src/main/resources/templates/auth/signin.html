@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>teste</div>
+
+<head th:replace="~{head :: head}"></head>
+
+<body class="h-screen w-screen flex justify-center bg-primary-subtle">
+    <div class="container-md shadow bg-white grid md:grid-cols-2 justify-center p-0 md:my-20 rounded-2xl">
+        <div class="hidden md:block h-full bg-[#4F46E5]">info</div>
+        <div class="h-full p-10 ">
+            <form th:object="${signinRequest}" th:action="@{/}" method="post">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <p class="form-label mb-3">Do not have aaccount? <span><a href=""
+                            class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Signup
+                            now!</a></span></p>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
