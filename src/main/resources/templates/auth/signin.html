@@ -3,25 +3,65 @@
 
 <head th:replace="~{head :: head}"></head>
 
-<body class="h-screen w-screen flex justify-center bg-primary-subtle">
-    <div class="container-md shadow bg-white grid md:grid-cols-2 justify-center p-0 md:my-20 rounded-2xl">
+<body class="h-screen w-screen flex justify-center">
+    <div
+        class="md:container md:mx-auto w-full shadow-xl bg-white grid md:grid-cols-2 justify-center p-0 md:my-20 md:rounded-2xl">
         <div class="hidden md:block h-full bg-[#4F46E5]">info</div>
         <div class="h-full p-10 ">
+            <div th:if="${errorAuthentication}"
+                class="flex p-4 mb-10 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                role="alert">
+                <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor"
+                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div th:text="${errorAuthentication}">
+                </div>
+            </div>
+            <form th:object="${signinRequest}" th:action="@{/}" method="post">
+                <div class="relative z-0 w-full mb-6 group">
+                    <input th:field="*{email}" type="email" name="floating_email" id="floating_email"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " required />
+                    <label for="floating_email"
+                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email
+                        address</label>
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                    <input th:field="*{password}" type="password" name="floating_password" id="floating_password"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " required />
+                    <label for="floating_password"
+                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                </div>
+                <p class="form-label mb-3">Do not have aaccount? <span><a href=""
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Signup
+                            now!</a></span></p>
+                <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </form>
+
+            <!-- <div th:if="${errorAuthentication}" th:text="${errorAuthentication}" class="alert alert-danger"
+                role="alert">
+            </div>
             <form th:object="${signinRequest}" th:action="@{/}" method="post">
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    <label class="form-label">Email address</label>
+                    <input th:field="*{email}" type="email" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <input th:field="*{password}" type="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <p class="form-label mb-3">Do not have aaccount? <span><a href=""
                             class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Signup
                             now!</a></span></p>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+                <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Send</button>
+            </form> -->
         </div>
     </div>
 </body>
