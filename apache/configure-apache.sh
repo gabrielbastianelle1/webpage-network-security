@@ -17,8 +17,8 @@ cat > /etc/apache2/sites-available/springmvc.conf <<EOF
     SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
 
     ProxyPreserveHost On
-    ProxyPass / http://app:8080/
-    ProxyPassReverse / http://app:8080/
+    ProxyPass / http://synapsetech-web:8080/
+    ProxyPassReverse / http://synapsetech-web:8080/
 </VirtualHost>
 
 <VirtualHost *:80>

@@ -1,8 +1,14 @@
-version: '3'
+version: '3.9'
 
 networks:
   synapsetech:
+    driver: bridge
     name: synapsetech
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/8
+          gateway: 10.0.0.1
 
 
 services:
@@ -12,7 +18,8 @@ services:
       - "3306:3306"
     container_name: synapsetech-mysql-db
     networks:
-      - synapsetech
+      synapsetech:
+        ipv4_address: 10.0.0.2
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mydb
@@ -29,7 +36,8 @@ services:
       - "8080:8080"
     container_name: synapsetech-web
     networks:
-      - synapsetech  
+      synapsetech:
+        ipv4_address: 10.0.0.3
     volumes:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
@@ -44,9 +52,10 @@ services:
       dockerfile: Dockerfile
     container_name: synapsetech-apache
     networks:
-      - synapsetech  
+      synapsetech:
+        ipv4_address: 10.0.0.4 
     depends_on:
-      - app    
+      - app  
 
 volumes:
   mysqldata:
