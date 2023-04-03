@@ -1,25 +1,36 @@
 version: '3.9'
 
 networks:
-  synapsetech:
+  lan:
     driver: bridge
-    name: synapsetech
     ipam:
       driver: default
       config:
-        - subnet: 10.0.0.0/8
+        - subnet: 10.0.0.0/24
           gateway: 10.0.0.1
 
+  dmz:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
+
+  wireless:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
 
 services:
   db:
     image: mysql
-    ports:
-      - "3306:3306"
     container_name: synapsetech-mysql-db
     networks:
-      synapsetech:
-        ipv4_address: 10.0.0.2
+      - lan
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mydb
@@ -27,17 +38,15 @@ services:
       MYSQL_PASSWORD: mypassword
     volumes:
       - mysqldata:/var/lib/mysql
+
   app:
     image: backend
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
     container_name: synapsetech-web
     networks:
-      synapsetech:
-        ipv4_address: 10.0.0.3
+      - lan
     volumes:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
@@ -45,6 +54,7 @@ services:
     depends_on:
       - db
     command: bash run.sh
+
   apache:
     image: apache
     build:
@@ -52,10 +62,22 @@ services:
       dockerfile: Dockerfile
     container_name: synapsetech-apache
     networks:
-      synapsetech:
-        ipv4_address: 10.0.0.4 
+      - dmz
+      - lan
     depends_on:
-      - app  
+      - app 
+
+  firewall:
+    image: shorewall
+    build: 
+      context: firewall/
+      dockerfile: Dockerfile
+    container_name: synapsetech-firewall   
+    networks:
+      - lan
+      - dmz
+      - wireless
+    command: tail -f /dev/null   
 
 volumes:
   mysqldata:
