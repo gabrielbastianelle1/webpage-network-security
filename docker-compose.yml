@@ -27,17 +27,18 @@ networks:
 
 services:
   db:
-    image: mysql
+    image: mysql:5
     container_name: synapsetech-mysql-db
     networks:
-      - lan
+      lan:
+        ipv4_address: 10.0.0.5
+    ports:
+      - "3306:3306"    
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: mydb
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
-    volumes:
-      - mysqldata:/var/lib/mysql
 
   app:
     image: backend
@@ -46,7 +47,8 @@ services:
       dockerfile: Dockerfile
     container_name: synapsetech-web
     networks:
-      - lan
+      lan:
+        ipv4_address: 10.0.0.3
     volumes:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
@@ -62,22 +64,49 @@ services:
       dockerfile: Dockerfile
     container_name: synapsetech-apache
     networks:
-      - dmz
-      - lan
+      lan:
+        ipv4_address: 10.0.0.10
+      dmz:
+        ipv4_address: 172.16.0.2  
     depends_on:
       - app 
 
   firewall:
-    image: shorewall
+    image: firewall
     build: 
       context: firewall/
       dockerfile: Dockerfile
-    container_name: synapsetech-firewall   
+    container_name: synapsetech-firewall
+    cap_add:
+      - NET_ADMIN   
+    networks:
+      lan:
+        ipv4_address: 10.0.0.4
+      dmz:
+        ipv4_address: 172.16.0.3
+      wireless:
+        ipv4_address: 192.168.0.2  
+    command: tail -f /dev/null
+
+
+  client:
+    image: ubuntu
+    container_name: synapsetech-client    
     networks:
       - lan
-      - dmz
-      - wireless
-    command: tail -f /dev/null   
+    command: tail -f /dev/null
 
-volumes:
-  mysqldata:
+  kali:
+    image: hackear
+    build: 
+      context: kali/
+      dockerfile: Dockerfile
+    container_name: synapsetech-kali
+    cap_add:
+      - NET_ADMIN  
+    networks:
+      lan:
+        ipv4_address: 10.0.0.100
+      dmz:
+        ipv4_address: 172.16.0.100    
+    command: tail -f /dev/null
